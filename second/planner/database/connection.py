@@ -1,6 +1,8 @@
+from pathlib import Path
 from typing import Any, List, Optional
 
 from beanie import PydanticObjectId, init_beanie
+from dotenv import load_dotenv
 from motor.motor_asyncio import AsyncIOMotorClient
 from pydantic import BaseModel
 from pydantic import BaseSettings
@@ -9,9 +11,18 @@ from planner.models.events import Event
 from planner.models.users import User
 
 
+from dotenv import load_dotenv
+from pathlib import Path
+
+# .env 파일의 경로 설정 (planner/database/ 디렉토리에서 상위 디렉토리로 이동)
+env_path = Path(__file__).parent.parent / ".env"
+load_dotenv(dotenv_path=env_path)
+
+
 class Settings(BaseSettings):
     DATABASE_URL: Optional[str] = None
     DATABASE_NAME: str = "planner-database"
+    SECRET_KEY: Optional[str] = None
 
     async def initialize_database(self):
         client = AsyncIOMotorClient(self.DATABASE_URL)
